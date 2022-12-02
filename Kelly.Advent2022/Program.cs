@@ -84,7 +84,8 @@ static class Program
     {
         var data = File.ReadAllBytes(inputFile);
         int index = 0;
-        int score = 0;
+        int score1 = 0;
+        int score2 = 0;
 
         while (true)
         {
@@ -95,7 +96,7 @@ static class Program
             
             var defense = FindValue('X');
 
-            var outcome = (defense - attack) switch
+            var outcome1 = (defense - attack) switch
             {
                 -2 => 6,
                 -1 => 0,
@@ -104,10 +105,28 @@ static class Program
                 2 => 0,
                 _ => throw new NotSupportedException("Not possible")
             };
-            score += defense + 1 + outcome;
+            
+            score1 += defense + 1 + outcome1;
+
+            var outcome2 = (attack, defense) switch
+            {
+                (0, 0) => 3,
+                (0, 1) => 1,
+                (0, 2) => 2,
+                (1, 0) => 1,
+                (1, 1) => 2,
+                (1, 2) => 3,
+                (2, 0) => 2,
+                (2, 1) => 3,
+                (2, 2) => 1,
+                (_, _) => throw new NotSupportedException("Not possible")
+            };
+            
+            score2 += defense * 3 + outcome2;
         }
 
-        Console.WriteLine(score);
+        Console.WriteLine(score1);
+        Console.WriteLine(score2);
 
         int FindValue(int baseValue)
         {
