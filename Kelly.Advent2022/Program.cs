@@ -17,6 +17,9 @@ static class Program
                 case 1:
                     Day1(args[1]);
                     break;
+                case 2:
+                    Day2(args[1]);
+                    break;
                 default:
                     Console.WriteLine($"Day {day} is not implemented.");
                     break;
@@ -60,7 +63,7 @@ static class Program
             {
                 mostCalories[0] = currentCalories;
 
-                for (int i = 0; i < 2; ++i)
+                for (int i = 0; i < mostCalories.Length - 1; ++i)
                 {
                     if (mostCalories[i + 1] < mostCalories[i])
                     {
@@ -68,8 +71,55 @@ static class Program
                         mostCalories[i + 1] = mostCalories[i];
                         mostCalories[i] = swapValue;
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
+        }
+    }
+
+    static void Day2(string inputFile)
+    {
+        var data = File.ReadAllBytes(inputFile);
+        int index = 0;
+        int score = 0;
+
+        while (true)
+        {
+            var attack = FindValue('A');
+
+            if (attack == -1)
+                break;
+            
+            var defense = FindValue('X');
+
+            var outcome = (defense - attack) switch
+            {
+                -2 => 6,
+                -1 => 0,
+                0 => 3,
+                1 => 6,
+                2 => 0,
+                _ => throw new NotSupportedException("Not possible")
+            };
+            score += defense + 1 + outcome;
+        }
+
+        Console.WriteLine(score);
+
+        int FindValue(int baseValue)
+        {
+            while (index < data.Length)
+            {
+                var value = data[index++] - baseValue;
+
+                if (0 <= value && value <= 2)
+                    return value;
+            }
+
+            return -1;
         }
     }
 }
