@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Kelly.Advent2022;
 
@@ -33,7 +34,7 @@ static class Program
     static void Day1(string inputFile)
     {
         var lines = File.ReadAllLines(inputFile);
-        var mostCalories = 0;
+        var mostCalories = new int[3];
         var currentCalories = 0;
 
         foreach (var line in lines)
@@ -42,20 +43,33 @@ static class Program
             {
                 currentCalories += calories;
             }
-            else if (mostCalories < currentCalories)
-            {
-                mostCalories = currentCalories;
-                currentCalories = 0;
-            }
             else
             {
+                BubbleUp();
                 currentCalories = 0;
             }
         }
-
-        if (mostCalories < currentCalories)
-            mostCalories = currentCalories;
         
-        Console.WriteLine(mostCalories);
+        BubbleUp();
+        Console.WriteLine(string.Join(", ", mostCalories));
+        Console.WriteLine(mostCalories.Sum());
+
+        void BubbleUp()
+        {
+            if (mostCalories[0] < currentCalories)
+            {
+                mostCalories[0] = currentCalories;
+
+                for (int i = 0; i < 2; ++i)
+                {
+                    if (mostCalories[i + 1] < mostCalories[i])
+                    {
+                        var swapValue = mostCalories[i + 1];
+                        mostCalories[i + 1] = mostCalories[i];
+                        mostCalories[i] = swapValue;
+                    }
+                }
+            }
+        }
     }
 }
