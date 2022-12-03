@@ -24,6 +24,7 @@ static class Day03
         {
             ++lineNumber;
 
+            // Skip non-alphabetical junk.
             while (start < bytes.Length && !Tools.IsAlpha(bytes[start]))
                 ++start;
             
@@ -32,6 +33,7 @@ static class Day03
 
             int finish = start + 1;
 
+            // Encompass alphabetical treasure.
             while (finish < bytes.Length && Tools.IsAlpha(bytes[finish]))
                 ++finish;
             
@@ -44,9 +46,9 @@ static class Day03
             if (triads.Count == 3)
             {
                 var commonValue2 = GetCommonValue(
-                    bytes.AsSpan(triads[0].s, triads[0].f - triads[0].s),
-                    bytes.AsSpan(triads[1].s, triads[1].f - triads[1].s),
-                    bytes.AsSpan(triads[2].s, triads[2].f - triads[2].s));
+                    GetSpan(0),
+                    GetSpan(1),
+                    GetSpan(2));
                 var priority2 = GetPriority(commonValue2);
                 prioritySum2 += priority2;
                 triads.Clear();
@@ -57,6 +59,12 @@ static class Day03
 
         Console.WriteLine("Part 1: " + prioritySum1);
         Console.WriteLine("Part 2: " + prioritySum2);
+
+        Span<byte> GetSpan(int index)
+        {
+            var r = triads[index];
+            return bytes.AsSpan(r.s, r.f - r.s);
+        }
     }
 
     static int GetCommonValue(Span<byte> line)
